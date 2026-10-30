@@ -1,0 +1,8 @@
+import {test} from 'node:test';
+import {strict as assert} from 'node:assert';
+import {validCPF,pinError,normalize,validLocalDateTime,addMinutes,validateLesson,validateStudent} from '../worker/rules.ts';
+test('CPF válido e dígitos verificadores',()=>{assert.equal(validCPF('529.982.247-25'),true);assert.equal(validCPF('52998224726'),false);assert.equal(validCPF('11111111111'),false)});
+test('PIN bloqueia sequências, repetições e dígitos do CPF',()=>{const cpf='52998224725';assert.ok(pinError('123456',cpf));assert.ok(pinError('654321',cpf));assert.ok(pinError('121212',cpf));assert.ok(pinError('111111',cpf));assert.ok(pinError('998224',cpf));assert.equal(pinError('530741',cpf),null)});
+test('Nome sem acento em caixa indiferente',()=>{assert.equal(normalize('  JOÃO  D´Ávila  '),normalize('  Joao D´Avila '))});
+test('Datas civis válidas e aulas consecutivas',()=>{assert.equal(validLocalDateTime('2026-10-29T08:30'),true);assert.equal(validLocalDateTime('2026-02-30T10:00'),false);assert.equal(validLocalDateTime('2028-02-29T10:00'),true);assert.equal(addMinutes('2026-10-29T23:00',120),'2026-10-30T01:00');assert.deepEqual(validateLesson({start_local:'2026-10-29T08:00',count:2,notes:''}),{start_local:'2026-10-29T08:00',end_local:'2026-10-29T10:00',notes:''})});
+test('Registro de alunos valida limites',()=>{const row={name:'João Maria',category:'B',phone:'85999999999',cpf:'',lessons_total:10,lessons_done:5,amount_total_cents:10000,amount_paid_cents:5000,status:'em_andamento'};assert.equal(validateStudent(row).search_name,'joao maria');assert.throws(()=>validateStudent({...row,lessons_done:11}));assert.throws(()=>validateStudent({...row,cpf:'11111111111'}))});

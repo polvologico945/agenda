@@ -1,0 +1,9 @@
+# Copie para .dev.vars (não versionar valores reais).
+# Gere dois segredos DIFERENTES com: openssl rand -hex 32
+CPF_HMAC_SECRET=SUBSTITUIR_SEGREDO_ALEATORIO_64_HEX
+DATA_ENCRYPTION_KEY=SUBSTITUIR_OUTRO_SEGREDO_ALEATORIO_64_HEX
+RESEND_API_KEY=re_SUBSTITUIR
+EMAIL_FROM="Agenda CNH <contato@seudominio.com.br>"
+TURNSTILE_SECRET=SUBSTITUIR_CHAVE_PRIVADA
+APP_URL=http://localhost:8787
+ENVIRONMENT=development
